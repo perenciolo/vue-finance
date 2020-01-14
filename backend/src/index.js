@@ -1,19 +1,19 @@
 const { GraphQLServer } = require("graphql-yoga");
+const Binding = require("prisma-binding");
 const { prisma } = require("./generated/prisma-client");
 
-const resolvers = {
-  Query: {
-    async user(parent, args, context, info) {
-      const user = await prisma.user({ id: args.id });
-      console.log("User: ", user);
-      return user;
-    }
-  }
-};
+const resolvers = require("./resolvers");
 
 const server = new GraphQLServer({
   typeDefs: `${__dirname}/schema.graphql`,
-  resolvers
+  resolvers,
+  context: {
+    binding: new Binding.Prisma({
+      typeDefs: `${__dirname}/generated/graphql-schema/prisma.graphql`,
+      endpoint: process.env.PRISMA_ENDPOINT
+    }),
+    prisma
+  }
 });
 
 server
