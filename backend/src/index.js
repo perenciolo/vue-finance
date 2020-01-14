@@ -3,8 +3,10 @@ const { prisma } = require("./generated/prisma-client");
 
 const resolvers = {
   Query: {
-    user(parent, args, context, info) {
-      return prisma.user({ id: args.id });
+    async user(parent, args, context, info) {
+      const user = await prisma.user({ id: args.id });
+      console.log("User: ", user);
+      return user;
     }
   }
 };
