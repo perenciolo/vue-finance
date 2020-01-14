@@ -1,0 +1,45 @@
+type User {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  password: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Account {
+  id: ID! @unique
+  user: User
+  description: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum Operation {
+  DEBIT
+  CREDIT
+}
+
+type Category {
+  id: ID! @unique
+  user: User
+  description: String!
+  operation: Operation!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Record {
+  id: ID! @unique
+  user: User!
+  account: Account!
+  category: Category!
+  amount: Float!
+  type: Operation!
+  date: DateTime!
+  description: String!
+  tags: String
+  note: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

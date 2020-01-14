@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "author": {
+    "name": "Gustavo Perenciolo"
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "graphql-yoga": "1.17.4",
+    "prisma-client-lib": "1.28.3"
+  }
+}
