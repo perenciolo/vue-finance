@@ -12,6 +12,10 @@ type Query {
     accountsIds: [ID!]
     categoriesIds: [ID!]
   ): [Record!]!
+  """
+  Year, Month and Day, format "YYYY-MM-DD" e.g.: 2019-06-30
+  """
+  totalBalance(date: Date!): Float!
   user: User
 }
 
