@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const { getUserId } = require('./../../utils');
 
 function accounts(_, args, { binding, request }, info) {
@@ -32,6 +34,40 @@ function categories(_, { operation }, { binding, request }, info) {
     info
   );
 }
+function records(
+  _,
+  { month, type, accountsIds, categoriesIds },
+  { binding, request },
+  info
+) {
+  const userId = getUserId(request);
+
+  let AND = [{ user: { id: userId } }];
+  AND = !type ? AND : [...AND, { type }];
+  AND =
+    !accountsIds || accountsIds.length === 0
+      ? AND
+      : [...AND, { OR: accountsIds.map(id => ({ account: { id } })) }];
+  AND =
+    !categoriesIds || categoriesIds.length === 0
+      ? AND
+      : [...AND, { OR: categoriesIds.map(id => ({ category: { id } })) }];
+
+  if (month) {
+    const date = moment(month, 'MM-YYYY');
+    const startDate = date.startOf('month').toISOString();
+    const endDate = date.endOf('month').toISOString();
+    AND = [...AND, { date_gte: startDate }, { date_lte: endDate }];
+  }
+
+  return binding.query.records(
+    {
+      where: { AND },
+      orderBy: 'date_ASC'
+    },
+    info
+  );
+}
 
 async function user(_, args, { binding, request }, info) {
   const userId = getUserId(request);
@@ -39,4 +75,4 @@ async function user(_, args, { binding, request }, info) {
   return user;
 }
 
-module.exports = { accounts, categories, user };
+module.exports = { accounts, categories, records, user };
