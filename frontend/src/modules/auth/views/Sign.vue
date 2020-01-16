@@ -177,10 +177,10 @@ export default {
     async submit() {
       this.isLoading = true
       try {
-        const authData = this.isSignin
+        this.isSignin
           ? await AuthService.signin(this.user)
           : await AuthService.signup(this.user)
-        console.log('AuthData', authData)
+        this.$router.push(this.$route.query.redirect || '/dashboard')
       } catch (e) {
         console.log(e)
         this.error = formatError(e.message)
