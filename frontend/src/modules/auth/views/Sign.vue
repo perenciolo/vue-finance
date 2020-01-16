@@ -5,6 +5,13 @@
         <v-card class="elevation-12">
           <v-toolbar color="primary" dark>
             <v-toolbar-title>{{ texts.toolbar }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-progress-circular
+              v-show="isLoading"
+              indeterminate
+              color="white"
+              width="2"
+            ></v-progress-circular>
           </v-toolbar>
           <v-card-text>
             <v-form>
@@ -66,10 +73,14 @@
 
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators'
+
+import AuthService from '@/modules/auth/services/auth-service'
+
 export default {
   name: 'Sign',
   data: () => ({
     isSignin: true,
+    isLoading: false,
     user: {
       email: '',
       password: ''
@@ -154,11 +165,19 @@ export default {
     }
   },
   methods: {
-    log() {
-      console.log('Vuelidate :', this.$v)
-    },
-    submit() {
-      console.log('User :', this.user)
+    async submit() {
+      this.isLoading = true
+      try {
+        await new Promise(resolve => setTimeout(resolve, 3000))
+        const authData = this.isSignin
+          ? await AuthService.signin(this.user)
+          : await AuthService.signup(this.user)
+        console.log('AuthData', authData)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.isLoading = false
+      }
     }
   }
 }
