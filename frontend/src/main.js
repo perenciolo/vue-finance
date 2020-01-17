@@ -6,6 +6,7 @@ import store from '@/store'
 import { errorHandler } from '@/utils'
 
 import '@/plugins/vuelidate'
+import '@/plugins/moment'
 import vuetify from '@/plugins/vuetify'
 
 Vue.config.productionTip = false

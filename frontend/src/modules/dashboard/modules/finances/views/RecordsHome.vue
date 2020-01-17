@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <h1>Invoices</h1>
-    <RecordsList />
-  </div>
+  <RecordsList />
 </template>
 
 <script>

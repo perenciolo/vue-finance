@@ -29,7 +29,7 @@ const formatError = message => {
 }
 
 const groupBy = (array, key, makeCurrentKey) => {
-  if (array && array.length) {
+  if (array) {
     return array.reduce((accumulated, item) => {
       const currentKey = makeCurrentKey(item, key)
 
@@ -40,7 +40,7 @@ const groupBy = (array, key, makeCurrentKey) => {
     }, {})
   }
 
-  return null
+  return []
 }
 
 export { currencyFormatter, errorHandler, formatError, groupBy }
