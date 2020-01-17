@@ -1,3 +1,11 @@
+const currencyFormatter = (
+  { locale, currency } = { locale: 'pt-BR', currency: 'BRL' }
+) =>
+  new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency
+  })
+
 const errorHandler = (err, vm, info) => {
   console.log('Vue [error handler]: ', err, info)
   const jwtErrors = [
@@ -20,4 +28,19 @@ const formatError = message => {
   return messageSplit[messageSplit.length - 1].trim()
 }
 
-export { errorHandler, formatError }
+const groupBy = (array, key, makeCurrentKey) => {
+  if (array && array.length) {
+    return array.reduce((accumulated, item) => {
+      const currentKey = makeCurrentKey(item, key)
+
+      return {
+        ...accumulated,
+        [currentKey]: [...(accumulated[currentKey] || []), item]
+      }
+    }, {})
+  }
+
+  return null
+}
+
+export { currencyFormatter, errorHandler, formatError, groupBy }
