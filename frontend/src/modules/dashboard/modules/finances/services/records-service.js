@@ -6,8 +6,8 @@ import TotalBalanceQuery from '@/modules/dashboard/modules/finances/graphql/Tota
 
 const records = async variables => {
   const response = await apollo.query({
-    ...variables,
-    query: RecordsQuery
+    query: RecordsQuery,
+    variables
   })
 
   return response.data.records
