@@ -101,7 +101,9 @@ async function totalBalance(_, { date }, { prisma, request }, info) {
 
   const response = await prisma.$graphql(mutation, variables);
   const totalBalance =
-    response && response.executeRaw.length
+    response &&
+    response.executeRaw.length &&
+    response.executeRaw[0].totalbalance
       ? response.executeRaw[0].totalbalance
       : 0;
 
