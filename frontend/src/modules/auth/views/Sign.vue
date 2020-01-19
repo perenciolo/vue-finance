@@ -180,7 +180,8 @@ export default {
         this.isSignin
           ? await AuthService.signin(this.user)
           : await AuthService.signup(this.user)
-        this.$router.push(this.$route.query.redirect || '/dashboard')
+        const path = this.$route.query.redirect || '/dashboard'
+        if (this.$route.path !== path) this.$router.push(path)
       } catch (e) {
         console.log(e)
         this.error = formatError(e.message)

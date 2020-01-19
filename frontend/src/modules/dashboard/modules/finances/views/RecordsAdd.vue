@@ -155,6 +155,7 @@ import moment from 'moment'
 
 import AccountsService from '@/modules/dashboard/modules/finances/services/accounts-service'
 import CategoriesService from '@/modules/dashboard/modules/finances/services/categories-service'
+import RecordsService from '@/modules/dashboard/modules/finances/services/records-service'
 
 import NumericDisplay from '@/modules/dashboard/modules/finances/components/NumericDisplay.vue'
 
@@ -251,8 +252,14 @@ export default {
 
       this.setTitle({ title })
     },
-    submit() {
-      console.log('form', this.record)
+    async submit() {
+      try {
+        await RecordsService.createRecord(this.record)
+        const path = '/dashboard/records'
+        if (this.$route.path !== path) this.$router.push(path)
+      } catch (error) {
+        console.log('Error creating Record: ', error)
+      }
     }
   }
 }

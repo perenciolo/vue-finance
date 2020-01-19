@@ -45,6 +45,8 @@
 
 <script>
 import moment from 'moment'
+import { Subject } from 'rxjs'
+import { mergeMap } from 'rxjs/operators'
 
 import { groupBy } from '@/utils'
 import RecordsService from '@/modules/dashboard/modules/finances/services/records-service'
@@ -65,12 +67,13 @@ export default {
   },
   mixins: [amountColorMixin, formatCurrencyMixin],
   data: () => ({
-    records: []
+    records: [],
+    monthSubject$: new Subject()
   }),
   computed: {
     mappedRecords() {
       return groupBy(this.records, 'date', (record, dateKey) =>
-        moment(record[dateKey]).format('DD/MM/YYYY')
+        moment(record[dateKey].split('T')[0]).format('DD/MM/YYYY')
       )
     },
     mappedRecordsLength() {
@@ -83,16 +86,24 @@ export default {
       return this.records.reduce((sum, record) => sum + record.amount, 0)
     }
   },
+  created() {
+    this.setRecords()
+  },
   methods: {
     changeMonth(month) {
-      this.$router.push({
-        path: this.$route.path,
-        query: { month }
-      })
-      this.setRecords(month)
+      const path = this.$route.path
+      this.$router
+        .push({
+          path,
+          query: { month }
+        })
+        .catch(() => {})
+      this.monthSubject$.next({ month })
     },
-    async setRecords(month) {
-      this.records = await RecordsService.records({ month })
+    setRecords(month) {
+      this.monthSubject$
+        .pipe(mergeMap(variables => RecordsService.records(variables)))
+        .subscribe(records => (this.records = records))
     },
     showDivider(index, obj) {
       return index < Object.keys(obj).length - 1

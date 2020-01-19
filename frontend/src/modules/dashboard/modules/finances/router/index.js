@@ -12,6 +12,7 @@ export default [
   },
   {
     path: 'records',
+    name: 'home',
     component: RecordsHome,
     meta: { requiresAuth: true },
     alias: ['home', '']
