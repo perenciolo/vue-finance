@@ -56,6 +56,10 @@ function createRecord(
     throw new Error('Invalid date');
   }
 
+  if ((type === 'DEBIT' && amount > 0) || (type === 'CREDIT' && amount < 0)) {
+    amount = -amount;
+  }
+
   const userId = getUserId(request);
   return binding.mutation.createRecord(
     {
