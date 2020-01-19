@@ -66,6 +66,18 @@ export default {
         icon: 'mdi-view-dashboard',
         url: '/dashboard',
         exact: true
+      },
+      {
+        title: 'Income',
+        icon: 'mdi-plus-circle',
+        url: '/dashboard/records/add?type=credit',
+        exact: true
+      },
+      {
+        title: 'Expense',
+        icon: 'mdi-minus-circle',
+        url: '/dashboard/records/add?type=debit',
+        exact: true
       }
     ],
     mini: false,

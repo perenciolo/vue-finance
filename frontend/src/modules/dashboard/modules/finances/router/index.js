@@ -6,7 +6,7 @@ const RecordsHome = () =>
 export default [
   {
     path: 'records/add',
-    name: 'records/add',
+    name: 'recordsAdd',
     meta: { requiresAuth: true },
     component: RecordsAdd
   },
