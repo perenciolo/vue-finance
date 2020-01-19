@@ -1,9 +1,11 @@
 <template>
   <div>
+    <TotalBalance class="mb-2" />
     <ToolbarByMonth
       format="MM-YYYY"
       :color="toolbarColor"
       @month="changeMonth"
+      :month="$route.query.month"
     />
     <v-card class="pt-2">
       <v-card-text class="text-sm-center" v-if="mappedRecordsLength === 0">
@@ -45,9 +47,11 @@
 import moment from 'moment'
 
 import { groupBy } from '@/utils'
+import RecordsService from '@/modules/dashboard/modules/finances/services/records-service'
+
 import RecordsListItem from '@/modules/dashboard/modules/finances/components/RecordsListItem.vue'
 import ToolbarByMonth from '@/modules/dashboard/modules/finances/components/ToolbarByMonth.vue'
-import RecordsService from '@/modules/dashboard/modules/finances/services/records-service'
+import TotalBalance from '@/modules/dashboard/modules/finances/components/TotalBalance.vue'
 
 import formatCurrencyMixin from '@/mixins/formatCurrency'
 import amountColorMixin from '@/modules/dashboard/modules/finances/mixins/amountColor'
@@ -56,7 +60,8 @@ export default {
   name: 'RecordsList',
   components: {
     RecordsListItem,
-    ToolbarByMonth
+    ToolbarByMonth,
+    TotalBalance
   },
   mixins: [amountColorMixin, formatCurrencyMixin],
   data: () => ({
@@ -80,6 +85,10 @@ export default {
   },
   methods: {
     changeMonth(month) {
+      this.$router.push({
+        path: this.$route.path,
+        query: { month }
+      })
       this.setRecords(month)
     },
     async setRecords(month) {
