@@ -8,12 +8,15 @@
           </v-btn>
         </div>
       </v-flex>
-      <v-flex sm10>
+      <v-flex sm8 offset-sm1>
         <v-toolbar-title class="text-sm-center">
           <span>{{ currentMonth }}</span>
         </v-toolbar-title>
       </v-flex>
-      <v-flex sm1>
+      <v-flex sm1 text-sm-right v-if="showSlot">
+        <slot />
+      </v-flex>
+      <v-flex sm1 :class="arrowRightClass">
         <div class="text-sm-right">
           <v-btn icon text @click="increment">
             <v-icon>mdi-chevron-right</v-icon>
@@ -32,12 +35,19 @@ export default {
   props: {
     color: String,
     format: String,
-    month: String
+    month: String,
+    showSlot: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => ({
     date: null
   }),
   computed: {
+    arrowRightClass() {
+      return !this.showSlot ? 'offset-sm1' : ''
+    },
     currentMonth() {
       return this.date.format('MMMM YYYY')
     }

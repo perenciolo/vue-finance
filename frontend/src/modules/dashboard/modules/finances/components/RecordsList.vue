@@ -6,7 +6,10 @@
       :color="toolbarColor"
       @month="changeMonth"
       :month="$route.query.month"
-    />
+      showSlot
+    >
+      <records-filter />
+    </ToolbarByMonth>
     <v-card class="pt-2">
       <v-card-text class="text-sm-center" v-if="mappedRecordsLength === 0">
         <v-icon size="100" color="grey">mdi-clipboard-text</v-icon>
@@ -51,6 +54,7 @@ import { mergeMap } from 'rxjs/operators'
 import { groupBy } from '@/utils'
 import RecordsService from '@/modules/dashboard/modules/finances/services/records-service'
 
+import RecordsFilter from '@/modules/dashboard/modules/finances/components/RecordsFilter.vue'
 import RecordsListItem from '@/modules/dashboard/modules/finances/components/RecordsListItem.vue'
 import ToolbarByMonth from '@/modules/dashboard/modules/finances/components/ToolbarByMonth.vue'
 import TotalBalance from '@/modules/dashboard/modules/finances/components/TotalBalance.vue'
@@ -61,6 +65,7 @@ import amountColorMixin from '@/modules/dashboard/modules/finances/mixins/amount
 export default {
   name: 'RecordsList',
   components: {
+    RecordsFilter,
     RecordsListItem,
     ToolbarByMonth,
     TotalBalance
