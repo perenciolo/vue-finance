@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-layout row>
-      <v-flex xs6>
-        <v-btn icon>
+      <v-flex xs6 v-if="isFiltering">
+        <v-btn icon @click="filter('clear')">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-flex>
-      <v-flex xs6>
+      <v-flex xs6 :class="buttonFilterClass">
         <v-btn icon @click="showFilterDialog = true">
           <v-icon>mdi-filter-variant</v-icon>
         </v-btn>
@@ -38,6 +38,7 @@
                     item-text="description"
                     item-value="value"
                     @change="localfilters.type = $event"
+                    :value="filter && filter.type"
                   >
                   </v-select>
                   <v-select
@@ -49,6 +50,7 @@
                     item-text="description"
                     item-value="id"
                     @change="localfilters.accountsIds = $event"
+                    :value="filter && filter.accountsIds"
                   >
                   </v-select>
                   <v-select
@@ -60,6 +62,7 @@
                     item-text="description"
                     item-value="id"
                     @change="localfilters.categoriesIds = $event"
+                    :value="filter && filter.categoriesIds"
                   >
                   </v-select>
                 </v-list-item-subtitle>
@@ -73,8 +76,12 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+
 import AccountsService from '@/modules/dashboard/modules/finances/services/accounts-service'
 import CategoriesService from '@/modules/dashboard/modules/finances/services/categories-service'
+
+const { mapState, mapActions } = createNamespacedHelpers('finances')
 
 export default {
   name: 'RecordsFilter',
@@ -99,6 +106,12 @@ export default {
     showFilterDialog: false,
     subscriptions: []
   }),
+  computed: {
+    ...mapState(['filters', 'isFiltering']),
+    buttonFilterClass() {
+      return !this.isFiltering ? 'offset-xs6' : ''
+    }
+  },
   created() {
     this.setItems()
   },
@@ -106,8 +119,11 @@ export default {
     this.subscriptions.forEach(subscription => subscription.unsubscribe())
   },
   methods: {
-    filter(e) {
-      console.log(this.localfilters)
+    ...mapActions(['setFilters']),
+    filter(type) {
+      this.showFilterDialog = false
+      this.setFilters({ filters: type !== 'clear' ? this.localfilters : null })
+      this.$emit('filter')
     },
     setItems() {
       this.subscriptions.push(

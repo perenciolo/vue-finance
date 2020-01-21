@@ -8,7 +8,7 @@
       :month="$route.query.month"
       showSlot
     >
-      <records-filter />
+      <records-filter @filter="filter" />
     </ToolbarByMonth>
     <v-card class="pt-2">
       <v-card-text class="text-sm-center" v-if="mappedRecordsLength === 0">
@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+
 import moment from 'moment'
 import { Subject } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
@@ -62,6 +64,8 @@ import TotalBalance from '@/modules/dashboard/modules/finances/components/TotalB
 import formatCurrencyMixin from '@/mixins/formatCurrency'
 import amountColorMixin from '@/modules/dashboard/modules/finances/mixins/amountColor'
 
+const { mapState, mapActions } = createNamespacedHelpers('finances')
+
 export default {
   name: 'RecordsList',
   components: {
@@ -73,10 +77,11 @@ export default {
   mixins: [amountColorMixin, formatCurrencyMixin],
   data: () => ({
     records: [],
-    monthSubject$: new Subject(),
+    filtersSubject$: new Subject(),
     subscriptions: []
   }),
   computed: {
+    ...mapState(['filters', 'month']),
     mappedRecords() {
       return groupBy(this.records, 'date', (record, dateKey) =>
         moment(record[dateKey].split('T')[0]).format('DD/MM/YYYY')
@@ -101,6 +106,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions(['setMonth']),
     changeMonth(month) {
       const path = this.$route.path
       this.$router
@@ -109,11 +115,16 @@ export default {
           query: { month }
         })
         .catch(() => {})
-      this.monthSubject$.next({ month })
+
+      this.setMonth({ month })
+      this.filter()
     },
-    setRecords(month) {
+    filter() {
+      this.filtersSubject$.next({ month: this.month, ...this.filters })
+    },
+    setRecords() {
       this.subscriptions.push(
-        this.monthSubject$
+        this.filtersSubject$
           .pipe(mergeMap(variables => RecordsService.records(variables)))
           .subscribe(records => (this.records = records))
       )
