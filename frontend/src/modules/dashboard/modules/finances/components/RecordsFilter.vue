@@ -15,18 +15,112 @@
     <v-dialog v-model="showFilterDialog" max-width="350px">
       <v-card>
         <v-card-title>
-          <h2 class="headline">Filtros</h2>
+          <h3 class="headline">Filter</h3>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="showFilterDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-btn icon @click="filter">
+            <v-icon>mdi-check</v-icon>
+          </v-btn>
         </v-card-title>
+        <v-card-text>
+          <v-list three-line>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Invoice Type</v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-select
+                    placeholder="All Invoices"
+                    chips
+                    deletable-chips
+                    :items="operations"
+                    item-text="description"
+                    item-value="value"
+                    @change="localfilters.type = $event"
+                  >
+                  </v-select>
+                  <v-select
+                    placeholder="All Accounts"
+                    chips
+                    deletable-chips
+                    multiple
+                    :items="accounts"
+                    item-text="description"
+                    item-value="id"
+                    @change="localfilters.accountsIds = $event"
+                  >
+                  </v-select>
+                  <v-select
+                    placeholder="All Categories"
+                    chips
+                    deletable-chips
+                    multiple
+                    :items="categories"
+                    item-text="description"
+                    item-value="id"
+                    @change="localfilters.categoriesIds = $event"
+                  >
+                  </v-select>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script>
+import AccountsService from '@/modules/dashboard/modules/finances/services/accounts-service'
+import CategoriesService from '@/modules/dashboard/modules/finances/services/categories-service'
+
 export default {
   name: 'RecordsFilter',
   data: () => ({
-    showFilterDialog: false
-  })
+    accounts: [],
+    categories: [],
+    localfilters: {
+      accountsIds: [],
+      categoriesIds: [],
+      type: null
+    },
+    operations: [
+      {
+        description: 'Income',
+        value: 'CREDIT'
+      },
+      {
+        description: 'Expense',
+        value: 'DEBIT'
+      }
+    ],
+    showFilterDialog: false,
+    subscriptions: []
+  }),
+  created() {
+    this.setItems()
+  },
+  destroyed() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe())
+  },
+  methods: {
+    filter(e) {
+      console.log(this.localfilters)
+    },
+    setItems() {
+      this.subscriptions.push(
+        AccountsService.accounts().subscribe(
+          accounts => (this.accounts = accounts)
+        )
+      )
+      this.subscriptions.push(
+        CategoriesService.categories().subscribe(
+          categories => (this.categories = categories)
+        )
+      )
+    }
+  }
 }
 </script>
