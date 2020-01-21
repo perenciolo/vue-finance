@@ -10,6 +10,7 @@
   "dependencies": {
     "@mdi/font": "^3.6.95",
     "apollo-boost": "^0",
+    "chart.js": "2.8.0",
     "core-js": "^2.6.5",
     "graphql": "^14",
     "md5": "^2.2.1",

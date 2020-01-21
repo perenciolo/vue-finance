@@ -12,6 +12,7 @@
       <v-card>
         <v-card-text>
           <h2 class="font-weight-light mb-4">{{ chart.title }}</h2>
+          <canvas :ref="chart.refId"></canvas>
         </v-card-text>
       </v-card>
     </v-flex>
@@ -20,6 +21,7 @@
 
 <script>
 import { mapActions as mapRootActions, createNamespacedHelpers } from 'vuex'
+import Chart from 'chart.js'
 import { Subject } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 
@@ -36,8 +38,8 @@ export default {
   },
   data: () => ({
     charts: [
-      { title: 'Incomes X Expenses' },
-      { title: 'Expenses by Category' }
+      { title: 'Incomes X Expenses', refId: 'chartIncomesExpenses' },
+      { title: 'Expenses by Category', refId: 'chartCategoryExpenses' }
     ],
     monthSubject$: new Subject(),
     records: [],
@@ -66,13 +68,42 @@ export default {
       this.setMonth({ month })
       this.monthSubject$.next(month)
     },
+    setCharts() {
+      const ctx = this.$refs.chartIncomesExpenses[0].getContext('2d')
+      const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          datasets: [
+            {
+              data: [500],
+              label: 'Incomes',
+              backgroundColor: [this.$vuetify.theme.themes.dark.primary]
+            },
+            {
+              data: [350],
+              label: 'Expenses',
+              backgroundColor: [this.$vuetify.theme.themes.dark.error]
+            }
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [
+              {
+                ticks: { beginAtZero: true }
+              }
+            ]
+          }
+        }
+      })
+    },
     setRecords() {
       this.subscriptions.push(
         this.monthSubject$
           .pipe(mergeMap(month => RecordsService.records({ month })))
           .subscribe(records => {
             this.records = records
-            console.log('Records', this.records)
+            this.setCharts()
           })
       )
     }
