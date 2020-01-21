@@ -78,6 +78,12 @@ export default {
         icon: 'mdi-minus-circle',
         url: '/dashboard/records/add?type=debit',
         exact: true
+      },
+      {
+        title: 'Reports',
+        icon: 'mdi-poll-box',
+        url: '/dashboard/reports',
+        exact: true
       }
     ],
     mini: false,
