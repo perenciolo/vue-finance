@@ -1,7 +1,6 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12>
-<<<<<<< HEAD
       <ToolbarByMonth
         format="MM-YYYY"
         color="primary"
@@ -16,15 +15,11 @@
           <canvas :ref="chart.refId"></canvas>
         </v-card-text>
       </v-card>
-=======
-      <ToolbarByMonth format="MM-YYYY" color="primary" />
->>>>>>> 1f806779fff816f7db4e26a879bd10a4da958faf
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-<<<<<<< HEAD
 import { mapActions as mapRootActions, createNamespacedHelpers } from 'vuex'
 import Chart from 'chart.js'
 import { Subject } from 'rxjs'
@@ -37,18 +32,11 @@ import ToolbarByMonth from '@/modules/dashboard/modules/finances/components/Tool
 
 const { mapState, mapActions } = createNamespacedHelpers('finances')
 
-=======
-import { mapActions } from 'vuex'
-
-import ToolbarByMonth from '@/modules/dashboard/modules/finances/components/ToolbarByMonth.vue'
-
->>>>>>> 1f806779fff816f7db4e26a879bd10a4da958faf
 export default {
   name: 'ReportsHome',
   components: {
     ToolbarByMonth
   },
-<<<<<<< HEAD
   data: () => ({
     chartIncomesExpenses: null,
     chartCategoryExpenses: null,
@@ -142,13 +130,6 @@ export default {
           })
       )
     }
-=======
-  created() {
-    this.setTitle({ title: 'Relatórios' })
-  },
-  methods: {
-    ...mapActions(['setTitle'])
->>>>>>> 1f806779fff816f7db4e26a879bd10a4da958faf
   }
 }
 </script>
