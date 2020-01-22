@@ -3,9 +3,9 @@
     <v-flex xs12>
       <ToolbarByMonth
         format="MM-YYYY"
-        color="primary"
         :month="month || $route.query.month"
         @month="changeMonth"
+        :color="color"
       />
     </v-flex>
     <v-flex v-for="(chart, index) in charts" :key="index" xs12 sm12 md6 lg6 xl6>
@@ -49,7 +49,16 @@ export default {
     subscriptions: []
   }),
   computed: {
-    ...mapState(['month'])
+    ...mapState(['month']),
+    recordsSum() {
+      return this.records.reduce(
+        (acc, record) => Number(acc) + Number(record.amount),
+        0
+      )
+    },
+    color() {
+      return this.recordsSum > -1 ? 'primary' : 'error'
+    }
   },
   created() {
     this.setTitle({ title: 'Relatórios' })
